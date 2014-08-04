@@ -60,6 +60,9 @@ public aspect Validacoes {
 		
 		else if(obj == e.getJMISave()){
 			if(!e.getPath().equals("")){
+				if(e.getPath().lastIndexOf(".SLM")!=e.getPath().length()-4){
+					e.setPath(e.getPath()+".SLM");
+				}
 				proceed(e,obj);
 				if(e.getPath().lastIndexOf("/")!=-1)	
 					e.setTitle("Simpleton Editor - "+e.getPath().substring(e.getPath().lastIndexOf("/")+1, e.getPath().length()));
