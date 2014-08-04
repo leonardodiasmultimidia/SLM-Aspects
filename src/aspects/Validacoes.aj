@@ -2,20 +2,23 @@ package aspects;
 
 
 import java.io.File;
-
 import javax.swing.JOptionPane;
-
-
-
-import controlador.ControladorDeInstrucao;
 import janela.Editor;
 import janela.Output;
 
 public aspect Validacoes {
 	
+	String erroArquivo = "";
+	
+	/*
+	 * Pointcuts
+	 */
 	pointcut validacoesMenu(Editor e, Object obj): execution (* Editor.menuFileAction(Object)) && target(e) && args(obj);
 	pointcut validacaoSaidaOutput(Output out, Object obj): execution (* Output.outputAction(Object)) && target(out) && args(obj);
-	pointcut validaPrograma(ControladorDeInstrucao CDI, File arquivo): call(* ControladorDeInstrucao.executaPrograma(File)) && target(CDI) && args(arquivo);
+	
+	/*
+	 * validacaoSaidaOutput
+	 */
 	
 	void around(Output out, Object obj): validacaoSaidaOutput(out,obj){
     	if(obj==out.getTxtInput() || obj==out.getBtEnviar()){
@@ -29,6 +32,10 @@ public aspect Validacoes {
     		}
     	}
 	}
+	
+	/*
+	 * validacoesMenu
+	 */
 	
 	void around(Editor e, Object obj): validacoesMenu(e,obj){
 		
