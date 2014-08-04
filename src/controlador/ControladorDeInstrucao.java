@@ -4,13 +4,10 @@ package controlador;
 import janela.Editor;
 import janela.Output;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import javax.swing.JOptionPane;
 
 public class ControladorDeInstrucao implements Runnable{
 
@@ -52,61 +49,28 @@ public class ControladorDeInstrucao implements Runnable{
 		return Ativo;
 	}
 	
+	public void setMemoria(String programa[], int numMax){
+		for(int cont = 0; cont < numMax ; cont++)
+			memoria[cont] = Integer.parseInt(programa[cont]);		
+	}
+	
 	/**
 	 * DEMAIS MÉTODOS
 	 */
 	
-	private void armazenaPrograma(String[] str, int numComandos){
-		for(int cont = 0; cont < numComandos; cont++)
-			memoria[cont]= Integer.parseInt(str[cont]);
-	}
-	
-	private String limpaString(String str){
-		str = str.replaceAll(" ", "");
-		while(str.contains("#"))
-			str = str.substring(0, str.lastIndexOf("#"));
-		return str;
-	}
-	
-	private void lerPrograma(java.io.File Arquivo) throws IOException, FileNotFoundException{
-			BufferedReader BReader;
-			String[] programa = new String[100];
-			String Erro = "";
-			boolean finalEncontrado = false;
-			
-			BReader = new BufferedReader(new FileReader(Arquivo));
+	private String[] lerPrograma(java.io.File Arquivo) throws IOException, FileNotFoundException{
+			String[] programa = new String[100];		
+			ControladorDeArquivo CDA = new ControladorDeArquivo();
+			CDA.abreArquivo(new FileReader(Arquivo));
 			int contador = 0;
-			while(BReader.ready()){
-				programa[contador] = BReader.readLine();
-				programa[contador] = limpaString(programa[contador]);
-				if(programa[contador].equals(""))
-					programa[contador] = "+5100";
-				try{
-					Integer.parseInt(programa[contador]);
-				}catch(NumberFormatException e){
-					Erro += "Invalid caracter at line "+contador+"\n";
-				}
-				if(programa[contador].length()>5)
-					Erro += "Too many arguments at line "+contador+"\n";
-				if(programa[contador].length()<5)
-					Erro += "Too few arguments at line "+contador+"\n";
-				if(programa[contador].contains("+43"))
-					finalEncontrado = true;	
-				contador++;
+			while(CDA.EOF()){
+				programa[contador++] = CDA.getLine();
 			}
-			BReader.close();
-			if(!finalEncontrado)
-				Erro += "Terminate function is missing\n";
-			if(Erro!="")
-				JOptionPane.showMessageDialog(null, Erro,"Error",0);
-			else{
-				armazenaPrograma(programa, contador);
-				Ativo = true;
-			}
+			CDA.fechaArquivo();
+			return programa;
 	}
 	
 	public void executaPrograma(java.io.File Arquivo) throws FileNotFoundException, IOException{
-		lerPrograma(Arquivo);
 		while(Ativo){
 			proximaInstrucao();
 			executaInstrucao();
@@ -289,6 +253,7 @@ public class ControladorDeInstrucao implements Runnable{
 	@Override
 	public void run() {
 		try {
+			lerPrograma(pathFile);
 			executaPrograma(pathFile);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
