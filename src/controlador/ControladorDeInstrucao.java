@@ -54,6 +54,9 @@ public class ControladorDeInstrucao implements Runnable{
 			memoria[cont] = Integer.parseInt(programa[cont]);		
 	}
 	
+	public int[] getMemoria(){
+		return memoria;
+	}
 	/**
 	 * DEMAIS MÉTODOS
 	 */
@@ -165,7 +168,6 @@ public class ControladorDeInstrucao implements Runnable{
 	}
 	private void HALT(){
 		Ativo = false;
-		exibirMemoria();
 	}
 	
 	private void executaInstrucao(){
@@ -218,36 +220,6 @@ public class ControladorDeInstrucao implements Runnable{
 				HALT();
 			break;
 		}
-	}
-	
-	private void exibirMemoria(){
-		int cont = 0;
-		Output.addText("|     |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  ");
-		for(; cont < memoria.length;cont++){
-			if(cont%10==0)
-				Output.addText("|\n|  "+cont/10+"  ");
-			if(memoria[cont]>=0){
-				Output.addText("|+");
-				if(memoria[cont]<1000)
-					Output.addText("0");
-				if(memoria[cont]<100)
-					Output.addText("0");
-				if(memoria[cont]<10)
-					Output.addText("0");
-				Output.addText(""+memoria[cont]);
-			}
-			else{
-				Output.addText("|-");
-				if(memoria[cont]*(-1)<1000)
-					Output.addText("0");
-				if(memoria[cont]*(-1)<100)
-					Output.addText("0");
-				if(memoria[cont]*(-1)<10)
-					Output.addText("0");
-				Output.addText(""+memoria[cont]*(-1));
-			}
-		}
-		Output.addText("|\n");
 	}
 
 	@Override

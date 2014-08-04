@@ -93,7 +93,10 @@ public aspect Validacoes {
 		}
 		
 		else if(obj == e.getJMIRun()){
-			e.menuFileAction(e.getJMISave());
+			if(!e.getJTextAreaEditor().getText().equals(""))
+				e.menuFileAction(e.getJMISave());
+			else
+				e.menuFileAction(e.getJMIOpen());
 			if(!e.getPath().equals("")){
 				proceed(e,obj);
 				if(e.getPath().lastIndexOf("/")!=-1)
