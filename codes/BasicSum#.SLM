@@ -1,0 +1,10 @@
++1007 #read to 07
++1008 #read to 08
++2007 #load 07 on buffer
++3008 #sum 08 to buffer
++2109 #store buffer on 09
++1109 #write 09 on screen
++4300 #end
++0000 #var
++0000 #var
++0000 #var
